@@ -40,11 +40,13 @@ def cargar_modelo():
     st.stop()
 
 def preparar_imagen(img):
-    # Convertir a RGB por si tiene transparencias (como los archivos PNG) y redimensionar a 224x224
+    # Asegurar formato RGB y tamaño 224x224
     img = img.convert("RGB").resize(IMG_SIZE)
     arr = np.array(img, dtype=np.float32)
-    # Escalado de píxeles dividiendo entre 255.0, idéntico al ImageDataGenerator del entrenamiento
-    arr = arr / 255.0
+    
+    # Reemplazamos la división manual por el preprocesamiento oficial de MobileNetV2
+    arr = tf.keras.applications.mobilenet_v2.preprocess_input(arr)
+    
     return np.expand_dims(arr, axis=0)
 
 def predecir(img):
