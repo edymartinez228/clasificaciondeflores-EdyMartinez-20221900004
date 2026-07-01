@@ -48,17 +48,13 @@ def preparar_imagen(img):
     return np.expand_dims(arr, axis=0)
 
 def predecir(img):
-    # Obtener las predicciones crudas del modelo
-    preds = modelo.predict(preparar_imagen(img), verbose=0)[0]
+    # 1. Obtener las predicciones directamente del modelo
+    probabilidades = modelo.predict(preparar_imagen(img), verbose=0)[0]
     
-    # Aplicamos la función softmax manualmente para asegurar que todas las probabilidades sumen 100%
-    exp_preds = np.exp(preds - np.max(preds))
-    probabilidades = exp_preds / exp_preds.sum()
-    
-    # Ordenar los índices de mayor a menor probabilidad
+    # 2. Ordenar los índices de mayor a menor probabilidad
     top_indices = np.argsort(probabilidades)[::-1]
     
-    # Mapear los índices ordenados a sus nombres traducidos y porcentajes
+    # 3. Mapear los índices ordenados a sus nombres traducidos y porcentajes reales
     return [
         (LABELS_ES[CLASES_ENTRENAMIENTO[i]], float(probabilidades[i]) * 100)
         for i in top_indices
