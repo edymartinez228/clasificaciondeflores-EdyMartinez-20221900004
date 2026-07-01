@@ -38,6 +38,10 @@ def cargar_modelo():
         return tf.keras.models.load_model(MODEL_PATH, compile=False)
     st.error("No se encontró el modelo. Asegúrate de tener 'flower_model.h5' en la misma carpeta que app.py.")
     st.stop()
+    
+with st.sidebar:
+    st.write("### Modo Depuración (Debug)")
+    st.write("Si el modelo falla, tu entrenamiento guardó un orden de clases distinto.")
 
 def preparar_imagen(img):
     # Asegurar formato RGB y tamaño 224x224
