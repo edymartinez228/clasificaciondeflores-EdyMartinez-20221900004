@@ -48,19 +48,16 @@ def preparar_imagen(img):
     img = img.convert("RGB").resize(IMG_SIZE)
     arr = np.array(img, dtype=np.float32)
     
-    # Reemplazamos la división manual por el preprocesamiento oficial de MobileNetV2
+    # Procesamiento idéntico al del nuevo entrenamiento
     arr = tf.keras.applications.mobilenet_v2.preprocess_input(arr)
     
     return np.expand_dims(arr, axis=0)
 
 def predecir(img):
-    # 1. Obtener las predicciones directamente del modelo
+    # Tomar la salida directa de la capa Softmax del modelo entrenado
     probabilidades = modelo.predict(preparar_imagen(img), verbose=0)[0]
-    
-    # 2. Ordenar los índices de mayor a menor probabilidad
     top_indices = np.argsort(probabilidades)[::-1]
     
-    # 3. Mapear los índices ordenados a sus nombres traducidos y porcentajes reales
     return [
         (LABELS_ES[CLASES_ENTRENAMIENTO[i]], float(probabilidades[i]) * 100)
         for i in top_indices
